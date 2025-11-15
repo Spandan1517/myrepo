@@ -1,85 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Node {
-    int data;
-    struct Node *left, *right;
+struct N {
+    int d;
+    struct N *l, *r;
 };
 
-struct Node* createNode(int data) {
-    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-    node->data = data;
-    node->left = node->right = NULL;
-    return node;
+struct N* nn(int d) {
+    struct N* x = (struct N*)malloc(sizeof(struct N));
+    x->d = d;
+    x->l = x->r = NULL;
+    return x;
 }
 
-struct Node* insert(struct Node* root, int data) {
-    if (root == NULL) return createNode(data);
-    if (data < root->data)
-        root->left = insert(root->left, data);
-    else
-        root->right = insert(root->right, data);
-    return root;
+struct N* ins(struct N* rt, int d) {
+    if (!rt) return nn(d);
+    if (d < rt->d) rt->l = ins(rt->l, d);
+    else rt->r = ins(rt->r, d);
+    return rt;
 }
 
-void inorder(struct Node* root) {
-    if (root != NULL) {
-        inorder(root->left);
-        printf("%d ", root->data);
-        inorder(root->right);
-    }
-}
-
-void preorder(struct Node* root) {
-    if (root != NULL) {
-        printf("%d ", root->data);
-        preorder(root->left);
-        preorder(root->right);
-    }
-}
-
-void postorder(struct Node* root) {
-    if (root != NULL) {
-        postorder(root->left);
-        postorder(root->right);
-        printf("%d ", root->data);
-    }
-}
-
-void search(struct Node* root, int key) {
-    if (root == NULL) {
-        printf("NULL\n");
-        return;
-    }
-    if (root->data == key) {
-        printf("Found element.\n");
-        return;
-    }
-    if (key < root->data)
-        search(root->left, key);
-    else
-        search(root->right, key);
+void pt(struct N* rt, int sp) {
+    if (!rt) return;
+    sp += 5;
+    pt(rt->r, sp);
+    printf("\n");
+    for (int i = 5; i < sp; i++) printf(" ");
+    printf("%d\n", rt->d);
+    pt(rt->l, sp);
 }
 
 int main() {
-    struct Node* root = NULL;
-    int n, data, key;
+    struct N* rt = NULL;
+    int d;
+    printf("Enter values (-1 to stop):\n");
 
-    printf("Enter number of nodes: ");
-    scanf("%d", &n);
-
-    printf("Enter values:\n");
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &data);
-        root = insert(root, data);
+    while (1) {
+        scanf("%d", &d);
+        if (d == -1) break;
+        rt = ins(rt, d);
+        printf("\nTree:\n");
+        pt(rt, 0);
+        printf("\n");
     }
-
-    printf("Inorder: "); inorder(root);
-    printf("\nPreorder: "); preorder(root);
-    printf("\nPostorder: "); postorder(root);
-    printf("\nEnter element to search: ");
-    scanf("%d", &key);
-    search(root, key);
-
     return 0;
 }
